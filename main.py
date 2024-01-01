@@ -14,8 +14,8 @@ CONNECTION_STRING=os.environ['conn_str']
 MClient = MongoClient(CONNECTION_STRING)
 SUBREDDIT = "indiasocial"
 
-def entry(user, month):
-    db = MClient["2023"]
+def entry(user, month, year):
+    db = MClient[year]
     col = db[month]
     comments=1
     if col.count_documents({'user':user}) > 0:
@@ -36,10 +36,11 @@ comments = subreddit.stream.comments(skip_existing=True)
 months = ["january", "february", "march", "april", "may", "june", "july", "august", 
         "september","october", "november", "december"]
 for comment in comments:
-    post =reddit.submission(id=comment.submission).title
-    if post.find("Random Discussion Thread")!=-1 and post.find("2023")!=-1:
+    post = reddit.submission(id=comment.submission).title
+    year = post.split()[-1]
+    if post.find("Random Discussion Thread")!=-1:
         for month in months:
-            if post.lower().find(month)!=-1 and post.find("2023"):
-                entry(str(comment.author), month)
+            if post.lower().find(month)!=-1:
+                entry(str(comment.author), month, year)
                 break
    
