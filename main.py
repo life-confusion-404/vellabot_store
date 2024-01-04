@@ -35,12 +35,16 @@ keep_alive()
 comments = subreddit.stream.comments(skip_existing=True)
 months = ["january", "february", "march", "april", "may", "june", "july", "august", 
         "september","october", "november", "december"]
-for comment in comments:
-    post = reddit.submission(id=comment.submission).title
-    year = post.split()[-1]
-    if post.find("Random Discussion Thread")!=-1:
-        for month in months:
-            if post.lower().find(month)!=-1:
-                entry(str(comment.author), month, year)
-                break
-   
+while True:
+    try:
+        for comment in comments:
+            post = reddit.submission(id=comment.submission).title
+            year = post.split()[-1]
+            if post.find("Random Discussion Thread")!=-1:
+                for month in months:
+                    if post.lower().find(month)!=-1:
+                        entry(str(comment.author), month, year)
+                        break
+    except:
+        continue
+        
